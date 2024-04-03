@@ -1,4 +1,5 @@
 import uuid
+
 import networkx as nx
 
 MGDM_REACH_TABLE = {
@@ -91,7 +92,17 @@ def build_virtual_edge(G, path, mode, modulation):
     return virtual_edge
 
 
-def check_wavelength(G, reach, modulation, mode):
+def check_wavelength(G, reach, modulation, mode, serve_table, request):
+    """
+    Rewrite this function to satisfy
+    1. if served request's work path overlap current request, the backup paths can
+    not share the same mode group. To develop this function we should read the backup path of overlapped requests and
+    if current request want to use the wavelength, if there is no non_overlapped request's backup path, add mode.
+    Maybe we need to add some attributes to topology.
+    2. if current request's backup path will across the wavelength exiting work path:
+    2.1 if there is another request's backup path, do not need to add mode
+    2.2 if there is not  another request's backup path, add mode
+    """
     remove_edge_list = []
     for u, v, key, data in G.edges(data=True, keys=True):
         if data['occupied_modulation'] != modulation and data['occupied_modulation'] is not None:
@@ -110,20 +121,21 @@ def check_wavelength(G, reach, modulation, mode):
     return G
 
 
-def build_virtual_graph(G, reach, modulation, mode):
+def build_virtual_graph(G, reach, modulation, mode, serve_table, request):
     virtual_graph = nx.MultiGraph()
+    working_path = serve_table[request]["working_path"]
     for u, v, key, data in G.edges(data=True, keys=True):
-        if 'wavelength' in data['type']:
+        if 'wavelength' in data['type'] and (u, v) not in working_path and (v, u) not in working_path:
             # print("adding {} to {}".format(u, v))
             virtual_graph.add_edge(u, v, key=key, **data,
                                    weight=data['distance'] + 0.0000001 * MGDM_REACH_TABLE[mode]['MIMO complexity'])
 
     virtual_graph = check_wavelength(virtual_graph, reach,
-                                     modulation, mode)
+                                     modulation, mode, serve_table, request)
     return virtual_graph
 
 
-def build_auxiliary_graph(src, dst, rate, G):
+def build_auxiliary_graph(src, dst, rate, G, serve_table, request):
     modulation_list = ['4QAM', '16QAM', '64QAM']
     auxiliary_graph = nx.MultiGraph()
     for i, mode in enumerate(MGDM_REACH_TABLE):
@@ -131,7 +143,8 @@ def build_auxiliary_graph(src, dst, rate, G):
             if modulation in modulation_list:
                 if MGDM_REACH_TABLE[mode][modulation]['capacity'] < rate:
                     continue
-                virtual_graph = build_virtual_graph(G, MGDM_REACH_TABLE[mode][modulation]['reach'], modulation, mode)
+                virtual_graph = build_virtual_graph(G, MGDM_REACH_TABLE[mode][modulation]['reach'], modulation, mode,
+                                                    serve_table, request)
 
                 for u in virtual_graph.nodes():
                     for v in virtual_graph.nodes():
@@ -171,5 +184,4 @@ def serve_request(G, request, path, auxiliary_graph, serve_table):
             G.edges[edge[0], edge[1], edge[2]]['occupied_modulation'] = modulation
             G.edges[edge[0], edge[1], edge[2]]['min_distance'] = edge[3]['distance']
             G.edges[edge[0], edge[1], edge[2]]['spectrum'] = 0
-            G.edges[edge[0], edge[1], edge[2]]['working_requests'].append(request)
             serve_table[(request[0], request[1], request[2], request[3])]["working_path"].append((edge[0], edge[1]))
