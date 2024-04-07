@@ -1,6 +1,7 @@
 import numpy as np
 import random
 
+
 def gen_request(lim_rate):
     rate_list = [100, 300, 500, 700, 900, 1100, 1300]
     request = []

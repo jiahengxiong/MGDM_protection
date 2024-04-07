@@ -1,4 +1,5 @@
 import uuid
+
 import networkx as nx
 
 MGDM_REACH_TABLE = {
@@ -91,26 +92,32 @@ def build_virtual_edge(G, path, mode, modulation):
     return virtual_edge
 
 
-def check_wavelength(G, reach, modulation, mode):
+def check_wavelength(G, reach, modulation, mode, rate):
     remove_edge_list = []
     for u, v, key, data in G.edges(data=True, keys=True):
         if data['occupied_modulation'] != modulation and data['occupied_modulation'] is not None:
             if [u, v, key] not in remove_edge_list:
                 remove_edge_list.append([u, v, key])
         if (set(data['occupied_mode']) not in set(mode) and len(data['occupied_mode']) != 0) or (
-                set(data['occupied_mode']) == set(mode)):
+                set(data['occupied_mode']) == mode):
             if [u, v, key] not in remove_edge_list:
                 remove_edge_list.append([u, v, key])
         if data['min_distance'] > reach:
             if [u, v, key] not in remove_edge_list:
                 remove_edge_list.append([u, v, key])
+
+        if len(data['occupied_mode']) != 0 or data['occupied_modulation'] is not None:
+            if MGDM_REACH_TABLE[mode][modulation]['capacity'] - \
+                    MGDM_REACH_TABLE[data["occupied_mode"]][data["occupied_modulation"]]['capacity'] < rate:
+                if [u, v, key] not in remove_edge_list:
+                    remove_edge_list.append([u, v, key])
     for edge in remove_edge_list:
         G.remove_edge(edge[0], edge[1], edge[2])
 
     return G
 
 
-def build_virtual_graph(G, reach, modulation, mode):
+def build_virtual_graph(G, reach, modulation, mode, rate):
     virtual_graph = nx.MultiGraph()
     for u, v, key, data in G.edges(data=True, keys=True):
         if 'wavelength' in data['type']:
@@ -119,7 +126,7 @@ def build_virtual_graph(G, reach, modulation, mode):
                                    weight=data['distance'] + 0.0000001 * MGDM_REACH_TABLE[mode]['MIMO complexity'])
 
     virtual_graph = check_wavelength(virtual_graph, reach,
-                                     modulation, mode)
+                                     modulation, mode, rate)
     return virtual_graph
 
 
@@ -131,7 +138,8 @@ def build_auxiliary_graph(src, dst, rate, G):
             if modulation in modulation_list:
                 if MGDM_REACH_TABLE[mode][modulation]['capacity'] < rate:
                     continue
-                virtual_graph = build_virtual_graph(G, MGDM_REACH_TABLE[mode][modulation]['reach'], modulation, mode)
+                virtual_graph = build_virtual_graph(G, MGDM_REACH_TABLE[mode][modulation]['reach'], modulation, mode,
+                                                    rate)
 
                 for u in virtual_graph.nodes():
                     for v in virtual_graph.nodes():
@@ -169,7 +177,10 @@ def serve_request(G, request, path, auxiliary_graph, serve_table):
         for edge in path_edge:
             G.edges[edge[0], edge[1], edge[2]]['occupied_mode'] = mode
             G.edges[edge[0], edge[1], edge[2]]['occupied_modulation'] = modulation
-            G.edges[edge[0], edge[1], edge[2]]['min_distance'] = edge[3]['distance']
+            G.edges[edge[0], edge[1], edge[2]]['min_distance'] = max(edge[3]['distance'],
+                                                                     G.edges[edge[0], edge[1], edge[2]]['min_distance'])
             G.edges[edge[0], edge[1], edge[2]]['spectrum'] = 0
             G.edges[edge[0], edge[1], edge[2]]['working_requests'].append(request)
+            G.edges[edge[0], edge[1], edge[2]]['occupied_rate'] = G.edges[edge[0], edge[1], edge[2]]['occupied_rate'] + \
+                                                                  request[2]
             serve_table[(request[0], request[1], request[2], request[3])]["working_path"].append((edge[0], edge[1]))
