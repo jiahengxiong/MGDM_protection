@@ -173,7 +173,7 @@ def build_virtual_graph(G, reach, modulation, mode, serve_table, request):
         if 'wavelength' in data['type'] and (u, v) not in working_path and (v, u) not in working_path:
             # print("adding {} to {}".format(u, v))
             virtual_graph.add_edge(u, v, key=key, **data,
-                                   weight=data['distance'] + 0.0000001 * MGDM_REACH_TABLE[mode]['MIMO complexity'])
+                                   weight=data['distance'] + 0.0000001 * data['spectrum'])
 
     virtual_graph = check_wavelength(G=virtual_graph, reach=reach, rate=rate,
                                      modulation=modulation, mode=mode, serve_table=serve_table, request=request)
@@ -202,14 +202,15 @@ def build_auxiliary_graph(src, dst, rate, G, serve_table, request):
                                 auxiliary_graph.add_edge(virtual_edge[0], virtual_edge[1], mode=mode,
                                                          modulation=modulation, dependency=virtual_edge[2],
                                                          distance=virtual_edge[3], key=uuid.uuid4().hex,
-                                                         weight=virtual_edge[3] + 0.0000001 * MGDM_REACH_TABLE[mode][
-                                                             'MIMO complexity'], spectrum=virtual_edge[4])
+                                                         weight=virtual_edge[3] + 0.0000001 * virtual_edge[4], spectrum=virtual_edge[4])
 
     return auxiliary_graph
 
 
 def serve_request(G, request, path, auxiliary_graph, serve_table):
     print(f"request = {request}, backup path = {path}")
+    complexity = 0
+    spectrum = 0
     for i in range(0, len(path) - 1):
         valid_edges = []
         u = path[i]
@@ -221,8 +222,10 @@ def serve_request(G, request, path, auxiliary_graph, serve_table):
         path_edge = data['dependency']
         mode = data['mode']
         modulation = data['modulation']
+        complexity += MGDM_REACH_TABLE[mode]['MIMO complexity']
         print(mode, modulation)
         for edge in path_edge:
+            spectrum += G.edges[edge[0], edge[1], edge[2]]['spectrum']
             G.edges[edge[0], edge[1], edge[2]]['backup_mode'].append(mode)
             G.edges[edge[0], edge[1], edge[2]]['backup_distance'].append(edge[3]["distance"])
             G.edges[edge[0], edge[1], edge[2]]['spectrum'] = 0
@@ -230,3 +233,5 @@ def serve_request(G, request, path, auxiliary_graph, serve_table):
             G.edges[edge[0], edge[1], edge[2]]['backup_rate'].append(request[2])
             serve_table[(request[0], request[1], request[2], request[3])]["backup_path"].append(
                 (edge[0], edge[1], edge[2]))
+
+    return complexity, spectrum

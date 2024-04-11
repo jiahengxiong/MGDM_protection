@@ -92,8 +92,29 @@ def build_virtual_edge(G, path, mode, modulation):
     return virtual_edge
 
 
-def check_wavelength(G, reach, modulation, mode, rate):
+def check_wavelength(G, reach, modulation, mode, serve_table, request, rate):
+    """
+    Rewrite this function to satisfy
+    1. if served request's work path overlap current request, the backup paths can
+    not share the same mode group. To develop this function we should read the backup path of overlapped requests and
+    if current request want to use the wavelength which is used by requests with overlapped working path, add mode.
+    2. if current request's backup path will across the wavelength exiting work path:
+    2.1 if there is another request's backup path, do not need to add mode
+    2.2 if there is not  another request's backup path, add mode
+    """
     remove_edge_list = []
+    add_mode_wavelength = []
+    overlapped_request = []
+
+    working_path = serve_table[request]['working_path']
+    for i, key in enumerate(serve_table):
+        if len(serve_table[key]['backup_path']) != 0 and key != request:
+            for edge in working_path:
+                if edge in serve_table[key]['working_path']:
+                    add_mode_wavelength.extend(serve_table[key]['backup_path'])
+                    overlapped_request.append(key)
+                    break
+
     for u, v, key, data in G.edges(data=True, keys=True):
         if data['occupied_modulation'] != modulation and data['occupied_modulation'] is not None:
             if [u, v, key] not in remove_edge_list:
@@ -111,26 +132,55 @@ def check_wavelength(G, reach, modulation, mode, rate):
                     MGDM_REACH_TABLE[data["occupied_mode"]][data["occupied_modulation"]]['capacity'] < rate:
                 if [u, v, key] not in remove_edge_list:
                     remove_edge_list.append([u, v, key])
+        backup_requests = data['protection_requests']
+        if backup_requests is not None:
+            overlapped_mode = []
+            overlapped_distance = []
+            overlapped_rate = []
+            for i in range(len(backup_requests)):
+                request = backup_requests[i]
+                if request in overlapped_request:
+                    overlapped_mode.append(data['backup_mode'][i])
+                    overlapped_distance.append(data['backup_distance'][i])
+                    overlapped_rate.append(data['backup_rate'][i])
+            if len(overlapped_mode) != 0:
+                min_distance = max(overlapped_distance)
+                max_mode = max(overlapped_mode, key=len)
+                if min_distance > reach:
+                    if [u, v, key] not in remove_edge_list:
+                        remove_edge_list.append([u, v, key])
+                if (set(max_mode) not in set(mode) and len(max_mode) != 0) or (
+                        set(max_mode) == mode):
+                    if [u, v, key] not in remove_edge_list:
+                        remove_edge_list.append([u, v, key])
+                if len(data['occupied_mode']) != 0 or data['occupied_modulation'] is not None:
+                    if MGDM_REACH_TABLE[mode][modulation]['capacity'] - \
+                            MGDM_REACH_TABLE[max_mode][data["occupied_modulation"]]['capacity'] < rate:
+                        if [u, v, key] not in remove_edge_list:
+                            remove_edge_list.append([u, v, key])
+
     for edge in remove_edge_list:
         G.remove_edge(edge[0], edge[1], edge[2])
 
     return G
 
 
-def build_virtual_graph(G, reach, modulation, mode, rate):
+def build_virtual_graph(G, reach, modulation, mode, serve_table, request):
     virtual_graph = nx.MultiGraph()
+    working_path = serve_table[request]["working_path"]
+    rate = request[2]
     for u, v, key, data in G.edges(data=True, keys=True):
-        if 'wavelength' in data['type']:
+        if 'wavelength' in data['type'] and (u, v) not in working_path and (v, u) not in working_path:
             # print("adding {} to {}".format(u, v))
             virtual_graph.add_edge(u, v, key=key, **data,
-                                   weight=data['distance'] + 0.0000001 * MGDM_REACH_TABLE[mode]['MIMO complexity'])
+                                   weight=data['distance'] + 0.0000001 * MGDM_REACH_TABLE[mode]["MIMO complexity"])
 
-    virtual_graph = check_wavelength(virtual_graph, reach,
-                                     modulation, mode, rate)
+    virtual_graph = check_wavelength(G=virtual_graph, reach=reach, rate=rate,
+                                     modulation=modulation, mode=mode, serve_table=serve_table, request=request)
     return virtual_graph
 
 
-def build_auxiliary_graph(src, dst, rate, G):
+def build_auxiliary_graph(src, dst, rate, G, serve_table, request):
     modulation_list = ['4QAM', '16QAM', '64QAM']
     auxiliary_graph = nx.MultiGraph()
     for i, mode in enumerate(MGDM_REACH_TABLE):
@@ -139,7 +189,7 @@ def build_auxiliary_graph(src, dst, rate, G):
                 if MGDM_REACH_TABLE[mode][modulation]['capacity'] < rate:
                     continue
                 virtual_graph = build_virtual_graph(G, MGDM_REACH_TABLE[mode][modulation]['reach'], modulation, mode,
-                                                    rate)
+                                                    serve_table, request)
 
                 for u in virtual_graph.nodes():
                     for v in virtual_graph.nodes():
@@ -152,16 +202,15 @@ def build_auxiliary_graph(src, dst, rate, G):
                                 auxiliary_graph.add_edge(virtual_edge[0], virtual_edge[1], mode=mode,
                                                          modulation=modulation, dependency=virtual_edge[2],
                                                          distance=virtual_edge[3], key=uuid.uuid4().hex,
-                                                         weight=virtual_edge[3] + 0.0000001 * MGDM_REACH_TABLE[mode][
-                                                             'MIMO complexity'], spectrum=virtual_edge[4])
+                                                         weight=virtual_edge[3] + 0.0000001 * MGDM_REACH_TABLE[mode]["MIMO complexity"], spectrum=virtual_edge[4])
 
     return auxiliary_graph
 
 
 def serve_request(G, request, path, auxiliary_graph, serve_table):
-    serve_table[(request[0], request[1], request[2], request[3])] = {"working_path": [],
-                                                                     "backup_path": []}
-    print(f"request = {request}, path = {path}")
+    print(f"request = {request}, backup path = {path}")
+    complexity = 0
+    spectrum = 0
     for i in range(0, len(path) - 1):
         valid_edges = []
         u = path[i]
@@ -173,14 +222,16 @@ def serve_request(G, request, path, auxiliary_graph, serve_table):
         path_edge = data['dependency']
         mode = data['mode']
         modulation = data['modulation']
+        complexity += MGDM_REACH_TABLE[mode]['MIMO complexity']
         print(mode, modulation)
         for edge in path_edge:
-            G.edges[edge[0], edge[1], edge[2]]['occupied_mode'] = mode
-            G.edges[edge[0], edge[1], edge[2]]['occupied_modulation'] = modulation
-            G.edges[edge[0], edge[1], edge[2]]['min_distance'] = max(edge[3]['distance'],
-                                                                     G.edges[edge[0], edge[1], edge[2]]['min_distance'])
+            spectrum += G.edges[edge[0], edge[1], edge[2]]['spectrum']
+            G.edges[edge[0], edge[1], edge[2]]['backup_mode'].append(mode)
+            G.edges[edge[0], edge[1], edge[2]]['backup_distance'].append(edge[3]["distance"])
             G.edges[edge[0], edge[1], edge[2]]['spectrum'] = 0
-            G.edges[edge[0], edge[1], edge[2]]['working_requests'].append(request)
-            G.edges[edge[0], edge[1], edge[2]]['occupied_rate'] = G.edges[edge[0], edge[1], edge[2]]['occupied_rate'] + \
-                                                                  request[2]
-            serve_table[(request[0], request[1], request[2], request[3])]["working_path"].append((edge[0], edge[1]))
+            G.edges[edge[0], edge[1], edge[2]]['protection_requests'].append(request)
+            G.edges[edge[0], edge[1], edge[2]]['backup_rate'].append(request[2])
+            serve_table[(request[0], request[1], request[2], request[3])]["backup_path"].append(
+                (edge[0], edge[1], edge[2]))
+
+    return complexity, spectrum

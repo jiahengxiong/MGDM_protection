@@ -143,6 +143,9 @@ class National_network:
                        spectrum=1, key=uuid.uuid4().hex)
 
         for u, v, key, data in G.edges(data=True, keys=True):
-            G[u][v][key]['distance'] = data['distance'] - 31
+            if (u, v) not in [(8, 11), (8, 6), (8, 10), (8, 3), (8, 14), (8, 2), (8, 7), (8, 1)]:
+                G[u][v][key]['distance'] = data['distance']/20
+            else:
+                G[u][v][key]['distance'] = data['distance'] * 4
 
         return G
