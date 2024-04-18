@@ -1,0 +1,8 @@
+{'SMT': {'Min_complexity': 15000, 'Min_spectrum': 16000}, 'MGDM': {'Min_complexity': 36000, 'Min_spectrum': 24000}, 'Full-MIMO': {'Min_complexity': 15000, 'Min_spectrum': 16000}}
+Capacity: SMT-Min_complexity-23000Capacity: SMT-Min_spectrum-33000Capacity: MGDM-Min_complexity-WaitingCapacity: MGDM-Min_spectrum-WaitingCapacity: Full-MIMO-Min_complexity-345000Capacity: Full-MIMO-Min_spectrum-345000
+
+
+*******************************************
+Capacity: SMT-Min_complexity-23000Capacity: SMT-Min_spectrum-33000Capacity: MGDM-Min_complexity-WaitingCapacity: MGDM-Min_spectrum-WaitingCapacity: Full-MIMO-Min_complexity-201000Capacity: Full-MIMO-Min_spectrum-201000
+*******************************************
+Capacity: SMT-Min_complexity-23000Capacity: SMT-Min_spectrum-33000Capacity: MGDM-Min_complexity-160000Capacity: MGDM-Min_spectrum-110000Capacity: Full-MIMO-Min_complexity-201000Capacity: Full-MIMO-Min_spectrum-201000

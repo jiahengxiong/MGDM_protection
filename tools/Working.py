@@ -153,17 +153,15 @@ def check_wavelength(G, reach, modulation, mode, rate, approach, index):
             if [u, v, key] not in remove_edge_list:
                 remove_edge_list.append([u, v, key])
         if set(set(data['occupied_mode'])).issubset(set(set(mode))) is False and len(data['occupied_mode']) != 0:
-            #print(set(data['occupied_mode']), set(mode))
             if [u, v, key] not in remove_edge_list:
                 remove_edge_list.append([u, v, key])
         if data['min_distance'] > reach:
             if [u, v, key] not in remove_edge_list:
                 remove_edge_list.append([u, v, key])
 
-        if len(data['occupied_mode']) != 0 or data['occupied_modulation'] is not None:
-            if reach_table[mode][modulation]['capacity'] - data['occupied_rate'] < rate:
-                if [u, v, key] not in remove_edge_list:
-                    remove_edge_list.append([u, v, key])
+        if reach_table[mode][modulation]['capacity'] - data['occupied_rate'] < rate:
+            if [u, v, key] not in remove_edge_list:
+                remove_edge_list.append([u, v, key])
     for edge in remove_edge_list:
         G.remove_edge(edge[0], edge[1], edge[2])
 
@@ -181,14 +179,19 @@ def build_virtual_graph(G, reach, modulation, mode, rate, approach, index):
         reach_table = MF_MGDM_REACH_TABLE
     virtual_graph = nx.MultiGraph()
     for u, v, key, data in G.edges(data=True, keys=True):
+        num_wavelength = 0
+        for key_i, edge_attr in G[u][v].items():
+            # print(edge_attr)
+            if edge_attr['occupied_modulation'] is not None:
+                num_wavelength = num_wavelength + 1
         if 'wavelength' in data['type']:
             # print("adding {} to {}".format(u, v))
             if index == 'Min_complexity':
                 virtual_graph.add_edge(u, v, key=key, **data,
-                                       weight=data['distance'] + 0.0000001 * reach_table[mode]["MIMO complexity"])
+                                       weight=data['distance'] + 0.0000001 * reach_table[mode]["MIMO complexity"] + 0.0000000001 * num_wavelength)
             if index == 'Min_spectrum':
                 virtual_graph.add_edge(u, v, key=key, **data,
-                                       weight=data['distance'] + 0.0000001 * data['spectrum'])
+                                       weight=data['distance'] + 0.0000001 * data['spectrum'] + 0.0000000001 * num_wavelength)
 
     virtual_graph = check_wavelength(virtual_graph, reach,
                                      modulation, mode, rate, approach, index)
@@ -227,13 +230,13 @@ def build_auxiliary_graph(src, dst, rate, G, approach, index):
                                     auxiliary_graph.add_edge(virtual_edge[0], virtual_edge[1], mode=mode,
                                                              modulation=modulation, dependency=virtual_edge[2],
                                                              distance=virtual_edge[3], key=uuid.uuid4().hex,
-                                                             weight=virtual_edge[3] + 0.000001*reach_table[mode]["MIMO complexity"],
+                                                             weight=0*virtual_edge[3] + 0.000001*reach_table[mode]["MIMO complexity"],
                                                              spectrum=virtual_edge[4])
                                 else:
                                     auxiliary_graph.add_edge(virtual_edge[0], virtual_edge[1], mode=mode,
                                                              modulation=modulation, dependency=virtual_edge[2],
                                                              distance=virtual_edge[3], key=uuid.uuid4().hex,
-                                                             weight=virtual_edge[3] + 0.000001 * virtual_edge[4],
+                                                             weight=0*virtual_edge[3] + 0.000001 * virtual_edge[4] + 1,
                                                              spectrum=virtual_edge[4])
 
     return auxiliary_graph
@@ -251,7 +254,7 @@ def serve_request(G, request, path, auxiliary_graph, serve_table, approach, inde
     if approach == 'MF-MGDM':
         reach_table = MF_MGDM_REACH_TABLE
 
-    print(f"request = {request}, path = {path}")
+    # print(f"request = {request}, path = {path}")
     complexity = 0
     spectrum = 0
     for i in range(0, len(path) - 1):
@@ -266,7 +269,7 @@ def serve_request(G, request, path, auxiliary_graph, serve_table, approach, inde
         mode = data['mode']
         modulation = data['modulation']
         complexity += reach_table[mode]['MIMO complexity']
-        print(mode, modulation)
+        # print(mode, modulation)
         for edge in path_edge:
             spectrum += G.edges[edge[0], edge[1], edge[2]]['spectrum']
             G.edges[edge[0], edge[1], edge[2]]['occupied_mode'] = mode

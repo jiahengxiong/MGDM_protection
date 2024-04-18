@@ -55,18 +55,19 @@ if __name__ == '__main__':
     """result = {'backup': {'complexity': [], 'spectrum': []},
               'working': {'complexity': [], 'spectrum': []}}"""
     result = {}
-    methods = ['SMT', 'MGDM', 'Full-MIMO', 'MF-MGDM']
+    methods = ['SMT', 'MGDM', 'Full-MIMO']
     index_list = ['Min_complexity', 'Min_spectrum']
-    total_traffic = 30
+    traffic = {'SMT': {'Min_complexity': 15000, 'Min_spectrum': 16000}, 'MGDM': {'Min_complexity': 36000, 'Min_spectrum': 24000}, 'Full-MIMO': {'Min_complexity': 15000, 'Min_spectrum': 16000}}
+    total_traffic = 25
     for method in methods:
         result[method] = {}
         for index in index_list:
             result[method][index] = {'backup': {'complexity': [], 'spectrum': []},
                                      'working': {'complexity': [], 'spectrum': []}}
-    for i in range(100):
-        request_list = gen_request(total_traffic * 1000)
+    for i in range(20):
         for method in methods:
             for index in index_list:
+                request_list = gen_request(traffic[method][index])
                 print(method, index)
                 network = Continental_network()
                 route_table = {}
@@ -82,17 +83,17 @@ if __name__ == '__main__':
 
     for i, method in enumerate(result):
         for j, index in enumerate(result[method]):
-            with open(f'result\\{method}.txt', 'a') as outfile:
-                outfile.write(f"##########{index}####################\n")
+            with open(f'result\\{method}_long.txt', 'a') as outfile:
+                outfile.write(f"##########{index}-Traffic-{traffic[method][index]}-No grooming####################\n")
                 outfile.write(str(result))
                 outfile.write("\n**********Average*********\n")
                 outfile.write(
-                    f"Average working path complexity: {sum(result[method][index]['working']['complexity']) / len(result[method][index]['working']['complexity'])}\n")
+                    f"Average working path complexity: {sum(result[method][index]['working']['complexity']) / len(result[method][index]['working']['complexity']) / traffic[method][index]}\n")
                 outfile.write(
-                    f"Average backup path complexity: {sum(result[method][index]['backup']['complexity']) / len(result[method][index]['backup']['complexity'])}\n")
+                    f"Average backup path complexity: {sum(result[method][index]['backup']['complexity']) / len(result[method][index]['backup']['complexity']) / traffic[method][index]}\n")
                 outfile.write(
-                    f"Average working path spectrum: {sum(result[method][index]['working']['spectrum']) / len(result[method][index]['working']['spectrum'])}\n")
+                    f"Average working path spectrum: {sum(result[method][index]['working']['spectrum']) / len(result[method][index]['working']['spectrum']) / traffic[method][index]}\n")
                 outfile.write(
-                    f"Average backup path spectrum: {sum(result[method][index]['backup']['spectrum']) / len(result[method][index]['backup']['spectrum'])}\n")
+                    f"Average backup path spectrum: {sum(result[method][index]['backup']['spectrum']) / len(result[method][index]['backup']['spectrum']) / traffic[method][index]}\n")
 
     # MGDM = 82300 full

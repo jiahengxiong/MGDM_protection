@@ -1,0 +1,1 @@
+Capacity: SMT-Min_complexity_25000TbsCapacity: SMT-Min_spectrum_35000TbsCapacity: MGDM-Min_complexity_WaitingTbsCapacity: MGDM-Min_spectrum_WaitingTbsCapacity: Full-MIMO-Min_complexity_WaitingTbsCapacity: Full-MIMO-Min_spectrum_WaitingTbsCapacity: MF-MGDM-Min_complexity_51000TbsCapacity: MF-MGDM-Min_spectrum_57000Tbs
