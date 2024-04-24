@@ -308,7 +308,7 @@ if __name__ == '__main__':
 
     # winsound.Beep(2000, 5000)
 
-    with open(f'result/capacity/long_capacity_spectrum.txt', 'a+') as outfile:
+    with open(f'result/capacity/long_capacity_spectrum_loop.txt', 'a+') as outfile:
         outfile.write("\n*******************************************\n")
         for protection in protection_policy_output:
             for method in methods_output:
