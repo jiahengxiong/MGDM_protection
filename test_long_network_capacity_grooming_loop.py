@@ -166,7 +166,35 @@ if __name__ == '__main__':
     result = {}
     no_serve_dict = {}
     protection_policy = ['shared', 'dadicated']
-    methods = ['SMT', 'MGDM', 'Full-MIMO', 'MF-MGDM']
+    # methods = ['SMT', 'MGDM', 'Full-MIMO', 'MF-MGDM']
+    methods = ['SMT', 'MF-MGDM', 'MGDM', 'Full-MIMO']
+    if current_approach_index == 1:
+        protection_policy_output = ['shared']
+        methods_output = ['SMT']
+    elif current_approach_index == 2:
+        protection_policy_output = ['dadicated']
+        methods_output = ['SMT']
+    elif current_approach_index == 3:
+        protection_policy_output = ['shared']
+        methods_output = ['MF-MGDM']
+    elif current_approach_index == 4:
+        protection_policy_output = ['dadicated']
+        methods_output = ['MF-MGDM']
+    elif current_approach_index == 5:
+        protection_policy_output = ['shared']
+        methods_output = ['MGDM']
+    elif current_approach_index == 6:
+        protection_policy_output = ['dadicated']
+        methods_output = ['MGDM']
+    elif current_approach_index == 7:
+        protection_policy_output = ['shared']
+        methods_output = ['Full-MIMO']
+    elif current_approach_index == 8:
+        protection_policy_output = ['dadicated']
+        methods_output = ['Full-MIMO']
+    else:
+        protection_policy_output = ['undefined']
+        methods_output = ['undefined']
     index_list = ['Min_spectrum']
     total_traffic = 10000  # 100000
     for protection in protection_policy:
@@ -186,6 +214,7 @@ if __name__ == '__main__':
     result['Full-MIMO']['Min_spectrum'] = 0
     result['MF-MGDM']['Min_complexity'] = 0
     result['MF-MGDM']['Min_spectrum'] = 0"""
+
     result['shared']['SMT']['Min_spectrum'] = 26000
     result['dadicated']['SMT']['Min_spectrum'] = 20000
     result['shared']['MF-MGDM']['Min_spectrum'] = 177000  # 180000
@@ -196,20 +225,30 @@ if __name__ == '__main__':
     result['dadicated']['Full-MIMO']['Min_spectrum'] = 161000  # 220000
     if current_approach_index == 1:
         result['shared']['SMT']['Min_spectrum'] = 0
+        approach_name = 'shared' + '-' + 'SMT' + '-' + 'Min_spectrum'
     elif current_approach_index == 2:
         result['dadicated']['SMT']['Min_spectrum'] = 0
+        approach_name = 'dadicated' + '-' + 'SMT' + '-' + 'Min_spectrum'
     elif current_approach_index == 3:
         result['shared']['MF-MGDM']['Min_spectrum'] = 0
+        approach_name = 'shared' + '-' + 'MF-MGDM' + '-' + 'Min_spectrum'
     elif current_approach_index == 4:
         result['dadicated']['MF-MGDM']['Min_spectrum'] = 0
+        approach_name = 'dadicated' + '-' + 'MF-MGDM' + '-' + 'Min_spectrum'
     elif current_approach_index == 5:
         result['shared']['MGDM']['Min_spectrum'] = 0
+        approach_name = 'shared' + '-' + 'MGDM' + '-' + 'Min_spectrum'
     elif current_approach_index == 6:
         result['dadicated']['MGDM']['Min_spectrum'] = 0
+        approach_name = 'dadicated' + '-' + 'MGDM' + '-' + 'Min_spectrum'
     elif current_approach_index == 7:
         result['shared']['Full-MIMO']['Min_spectrum'] = 0
+        approach_name = 'shared' + '-' + 'Full-MIMO' + '-' + 'Min_spectrum'
     elif current_approach_index == 8:
         result['dadicated']['Full-MIMO']['Min_spectrum'] = 0
+        approach_name = 'dadicated' + '-' + 'Full-MIMO' + '-' + 'Min_spectrum'
+    else:
+        approach_name = 'undefined'
 
 
     while True:
@@ -269,9 +308,10 @@ if __name__ == '__main__':
 
     # winsound.Beep(2000, 5000)
 
-    with open(f'result\\capacity\\long_capacity_spectrum.txt', 'a+') as outfile:
+    with open(f'result/capacity/long_capacity_spectrum.txt', 'a+') as outfile:
         outfile.write("\n*******************************************\n")
-        for protection in protection_policy:
-            for method in methods:
+        for protection in protection_policy_output:
+            for method in methods_output:
                 for index in index_list:
-                    outfile.write(f'Capacity: {protection}-{method}-{index}-{result[protection][method][index]}\n')
+                    # outfile.write(f'Capacity: {protection}-{method}-{index}-{result[protection][method][index]}\n')
+                    outfile.write('Capacity: ' + approach_name + str(result[protection][method][index]) + '\n')
