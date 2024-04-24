@@ -196,7 +196,6 @@ if __name__ == '__main__':
         protection_policy_output = ['undefined']
         methods_output = ['undefined']
     index_list = ['Min_spectrum']
-    total_traffic = 10000  # 100000
     for protection in protection_policy:
         manager = multiprocessing.Manager()
         result[protection] = manager.dict()
@@ -250,7 +249,9 @@ if __name__ == '__main__':
     else:
         approach_name = 'undefined'
 
-
+    total_traffic = 10000  # 100000
+    if current_approach_index == 7 or current_approach_index == 8:
+        total_traffic = 130000
     num_loop = 0
     while True:
         processes = []
@@ -291,6 +292,8 @@ if __name__ == '__main__':
                                 no_serve_dict[protection][method][index]))
                             result[protection][method][index] = total_traffic
         if result['shared']['MGDM']['Min_spectrum'] == 0 or result['dadicated']['MGDM']['Min_spectrum'] ==0:
+            total_traffic += 10000
+        elif result['shared']['Full-MIMO']['Min_spectrum'] == 0 or result['dadicated']['Full-MIMO']['Min_spectrum'] == 0:
             total_traffic += 10000
         else:
             total_traffic += 1000  # 确保每次循环都更新
