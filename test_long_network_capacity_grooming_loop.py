@@ -250,8 +250,15 @@ if __name__ == '__main__':
         approach_name = 'undefined'
 
     total_traffic = 10000  # 100000
-    if current_approach_index == 7 or current_approach_index == 8:
-        total_traffic = 130000
+    # todo: update for second iteration with smaller increment of total_traffic
+    if current_approach_index == 5:
+        total_traffic = 110000
+    if current_approach_index == 6:
+        total_traffic = 90000
+    if current_approach_index == 7:
+        total_traffic = 200000
+    if current_approach_index == 8:
+        total_traffic = 150000
     num_loop = 0
     while True:
         processes = []
@@ -291,14 +298,14 @@ if __name__ == '__main__':
                             print(1 - sum(no_serve_dict[protection][method][index]) / len(
                                 no_serve_dict[protection][method][index]))
                             result[protection][method][index] = total_traffic
-        if result['shared']['MGDM']['Min_spectrum'] == 0 or result['dadicated']['MGDM']['Min_spectrum'] ==0:
-            total_traffic += 10000
-        elif result['shared']['Full-MIMO']['Min_spectrum'] == 0 or result['dadicated']['Full-MIMO']['Min_spectrum'] == 0:
-            total_traffic += 10000
-        else:
-            total_traffic += 1000  # 确保每次循环都更新
+        # if result['shared']['MGDM']['Min_spectrum'] == 0 or result['dadicated']['MGDM']['Min_spectrum'] ==0:
+        #     total_traffic += 10000
+        # elif result['shared']['Full-MIMO']['Min_spectrum'] == 0 or result['dadicated']['Full-MIMO']['Min_spectrum'] == 0:
+        #     total_traffic += 10000
+        # else:
+        #     total_traffic += 1000  # 确保每次循环都更新
         # todo: 为了测试，先注释掉
-        # total_traffic += 1000  # 确保每次循环都更新
+        total_traffic += 1000  # 确保每次循环都更新
 
         # 检查所有进程是否已完成，如果是，则退出循环
         flag = True
