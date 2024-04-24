@@ -1,0 +1,8 @@
+
+*******************************************
+Capacity: shared-SMT-Min_spectrum-26000
+Capacity: shared-MGDM-Min_spectrum-177000
+Capacity: shared-Full-MIMO-Min_spectrum-211000
+Capacity: dadicated-SMT-Min_spectrum-20000
+Capacity: dadicated-MGDM-Min_spectrum-111000
+Capacity: dadicated-Full-MIMO-Min_spectrum-161000

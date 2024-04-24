@@ -1,1 +1,80 @@
 Capacity: SMT-Min_complexity_25000TbsCapacity: SMT-Min_spectrum_35000TbsCapacity: MGDM-Min_complexity_WaitingTbsCapacity: MGDM-Min_spectrum_WaitingTbsCapacity: Full-MIMO-Min_complexity_WaitingTbsCapacity: Full-MIMO-Min_spectrum_WaitingTbsCapacity: MF-MGDM-Min_complexity_51000TbsCapacity: MF-MGDM-Min_spectrum_57000Tbs
+*******************************************
+Capacity: SMT-Min_complexity-24000
+Capacity: SMT-Min_spectrum-30000
+Capacity: MGDM-Min_complexity-Waiting
+Capacity: MGDM-Min_spectrum-Waiting
+Capacity: Full-MIMO-Min_complexity-Waiting
+Capacity: Full-MIMO-Min_spectrum-waiting
+Capacity: MF-MGDM-Min_complexity-55000
+Capacity: MF-MGDM-Min_spectrum-57000
+
+*******************************************
+Capacity: shared-SMT-Min_complexity-28000
+Capacity: shared-MGDM-Min_complexity-waiting
+Capacity: shared-Full-MIMO-Min_complexity-waiting
+Capacity: shared-MF-MGDM-Min_complexity-waiting
+Capacity: dadicated-SMT-Min_complexity-28000
+Capacity: dadicated-MGDM-Min_complexity-waiting
+Capacity: dadicated-Full-MIMO-Min_complexity-waiting
+Capacity: dadicated-MF-MGDM-Min_complexity-waiting
+
+*******************************************
+Capacity: shared-SMT-Min_complexity-36000
+Capacity: shared-MGDM-Min_complexity-waiting
+Capacity: shared-Full-MIMO-Min_complexity-waiting
+Capacity: shared-MF-MGDM-Min_complexity-waiting
+Capacity: dadicated-SMT-Min_complexity-28000
+Capacity: dadicated-MGDM-Min_complexity-waiting
+Capacity: dadicated-Full-MIMO-Min_complexity-waiting
+Capacity: dadicated-MF-MGDM-Min_complexity-waiting
+
+*******************************************
+Capacity: shared-SMT-Min_complexity-26000
+Capacity: shared-MGDM-Min_complexity-waiting
+Capacity: shared-Full-MIMO-Min_complexity-waiting
+Capacity: shared-MF-MGDM-Min_complexity-waiting
+Capacity: dadicated-SMT-Min_complexity-23000
+Capacity: dadicated-MGDM-Min_complexity-waiting
+Capacity: dadicated-Full-MIMO-Min_complexity-waiting
+Capacity: dadicated-MF-MGDM-Min_complexity-waiting
+
+*******************************************
+Capacity: shared-SMT-Min_complexity-26000
+Capacity: shared-MGDM-Min_complexity-waiting
+Capacity: shared-Full-MIMO-Min_complexity-waiting
+Capacity: shared-MF-MGDM-Min_complexity-68000
+Capacity: dadicated-SMT-Min_complexity-23000
+Capacity: dadicated-MGDM-Min_complexity-waiting
+Capacity: dadicated-Full-MIMO-Min_complexity-waiting
+Capacity: dadicated-MF-MGDM-Min_complexity-51000
+
+*******************************************
+Capacity: shared-SMT-Min_complexity-26000
+Capacity: shared-MGDM-Min_complexity-waiting
+Capacity: shared-Full-MIMO-Min_complexity-waiting
+Capacity: shared-MF-MGDM-Min_complexity-68000
+Capacity: dadicated-SMT-Min_complexity-23000
+Capacity: dadicated-MGDM-Min_complexity-waiting
+Capacity: dadicated-Full-MIMO-Min_complexity-170000
+Capacity: dadicated-MF-MGDM-Min_complexity-51000
+
+*******************************************
+Capacity: shared-SMT-Min_complexity-26000
+Capacity: shared-MGDM-Min_complexity-waiting
+Capacity: shared-Full-MIMO-Min_complexity-250000
+Capacity: shared-MF-MGDM-Min_complexity-68000
+Capacity: dadicated-SMT-Min_complexity-23000
+Capacity: dadicated-MGDM-Min_complexity-waiting
+Capacity: dadicated-Full-MIMO-Min_complexity-170000
+Capacity: dadicated-MF-MGDM-Min_complexity-51000
+
+*******************************************
+Capacity: shared-SMT-Min_complexity-26000
+Capacity: shared-MGDM-Min_complexity-waiting
+Capacity: shared-Full-MIMO-Min_complexity-249000
+Capacity: shared-MF-MGDM-Min_complexity-68000
+Capacity: dadicated-SMT-Min_complexity-23000
+Capacity: dadicated-MGDM-Min_complexity-waiting
+Capacity: dadicated-Full-MIMO-Min_complexity-170000
+Capacity: dadicated-MF-MGDM-Min_complexity-51000

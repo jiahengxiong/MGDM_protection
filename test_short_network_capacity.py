@@ -1,6 +1,6 @@
 import networkx as nx
 
-import pythonProject.tools.Protection as Protection
+import pythonProject.tools.Shared_Protection as Protection
 from pythonProject.tools.Working import build_auxiliary_graph, serve_request
 from pythonProject.tools.uilts import gen_request
 from tools.Network import National_network

@@ -26,3 +26,63 @@ Average working path complexity: 6.584375
 Average backup path complexity: 7.334375
 Average working path spectrum: 21.484375
 Average backup path spectrum: 18.190625000000002
+##########Min_complexity-----2024-4-19-5:10:33####################
+Backup complexity: [147, 162, 153, 137, 156, 163, 163, 160, 159, 158, 151, 167, 161, 157, 144, 171, 159, 162, 152, 165]
+Backup spectrum: [257, 242, 224, 261, 266, 273, 283, 282, 277, 263, 237, 277, 236, 277, 247, 286, 275, 275, 284, 268]
+Working complexity: [132, 150, 135, 129, 140, 150, 147, 150, 147, 139, 134, 148, 147, 145, 139, 149, 148, 143, 140, 152]
+Working spectrum: [367, 390, 332, 372, 377, 391, 399, 420, 393, 361, 367, 394, 362, 424, 363, 406, 361, 378, 396, 391]
+**********Average*********
+Average working path complexity per Tbs: 6.660465116279069
+Average backup path complexity per Tbs: 7.31860465116279
+Average working path spectrum per Tbs: 17.77674418604651
+Average backup path spectrum per Tbs: 12.30232558139535
+##########Min_spectrum-----2024-4-19-5:10:33####################
+Backup complexity: [190, 221, 242, 223, 233, 239, 228, 244, 229, 256, 230, 228, 264, 253, 237, 241, 261, 234, 248, 271]
+Backup spectrum: [218, 177, 203, 178, 167, 190, 193, 179, 171, 192, 220, 191, 196, 199, 195, 212, 211, 228, 186, 199]
+Working complexity: [129, 132, 140, 134, 135, 139, 139, 150, 147, 150, 147, 145, 148, 150, 143, 147, 149, 140, 148, 152]
+Working spectrum: [325, 308, 309, 318, 280, 280, 289, 324, 290, 299, 316, 332, 298, 318, 308, 317, 313, 349, 275, 305]
+**********Average*********
+Average working path complexity per Tbs: 6.660465116279069
+Average backup path complexity per Tbs: 11.097674418604651
+Average working path spectrum per Tbs: 14.309302325581394
+Average backup path spectrum per Tbs: 9.081395348837209
+##########Min_complexity-----2024-4-22-7:15:35####################
+Backup complexity: [156, 149, 159, 154, 151, 152, 165, 154, 155, 167, 150, 151, 165, 153, 164, 167, 168, 166, 163, 176]
+Backup spectrum: [274, 243, 206, 231, 238, 227, 257, 262, 222, 223, 238, 224, 234, 235, 219, 247, 248, 232, 224, 220]
+Working complexity: [145, 138, 143, 140, 140, 137, 143, 136, 140, 153, 137, 137, 147, 143, 146, 153, 155, 154, 149, 163]
+Working spectrum: [319, 310, 284, 309, 305, 299, 328, 322, 314, 285, 289, 286, 299, 283, 282, 286, 316, 296, 307, 285]
+**********Average*********
+Average working path complexity per Tbs: 6.741860465116279
+Average backup path complexity per Tbs: 7.406976744186046
+Average working path spectrum per Tbs: 13.962790697674418
+Average backup path spectrum per Tbs: 10.93953488372093
+##########Min_spectrum-----2024-4-22-7:15:35####################
+Backup complexity: [172, 177, 172, 191, 170, 193, 181, 192, 168, 185, 164, 175, 186, 192, 192, 211, 197, 194, 190, 213]
+Backup spectrum: [218, 210, 219, 257, 225, 188, 243, 246, 206, 221, 212, 218, 199, 213, 210, 223, 228, 214, 220, 205]
+Working complexity: [138, 138, 142, 145, 140, 154, 137, 144, 140, 140, 139, 145, 146, 153, 154, 155, 157, 151, 168, 172]
+Working spectrum: [310, 299, 309, 319, 305, 281, 322, 328, 314, 288, 285, 282, 282, 295, 284, 285, 316, 306, 278, 289]
+**********Average*********
+Average working path complexity per Tbs: 6.879069767441861
+Average backup path complexity per Tbs: 8.63953488372093
+Average working path spectrum per Tbs: 13.9
+Average backup path spectrum per Tbs: 10.174418604651162
+##########Min_complexity-----2024-4-22-7:53:47####################
+Backup complexity: [168, 164, 156, 147, 161, 158, 146, 156, 159, 156, 165, 170, 159, 153, 155, 166, 158, 158, 164, 163]
+Backup spectrum: [249, 260, 249, 245, 273, 241, 230, 245, 213, 256, 244, 268, 217, 220, 240, 246, 235, 252, 256, 194]
+Working complexity: [150, 148, 140, 130, 145, 138, 128, 143, 147, 143, 152, 154, 144, 141, 137, 153, 147, 146, 153, 154]
+Working spectrum: [312, 336, 337, 302, 342, 331, 296, 326, 302, 314, 311, 318, 298, 306, 281, 289, 275, 307, 314, 316]
+**********Average*********
+Average working path complexity per Tbs: 6.727906976744186
+Average backup path complexity per Tbs: 7.3999999999999995
+Average working path spectrum per Tbs: 14.448837209302324
+Average backup path spectrum per Tbs: 11.23953488372093
+##########Min_spectrum-----2024-4-22-7:53:47####################
+Backup complexity: [164, 162, 187, 185, 193, 188, 186, 186, 181, 183, 181, 175, 185, 193, 194, 206, 192, 210, 194, 192]
+Backup spectrum: [234, 219, 220, 227, 234, 246, 252, 222, 241, 223, 201, 209, 204, 218, 234, 250, 228, 227, 233, 181]
+Working complexity: [130, 129, 141, 144, 150, 149, 146, 144, 144, 137, 148, 142, 144, 147, 147, 158, 152, 164, 153, 159]
+Working spectrum: [302, 296, 332, 336, 312, 335, 342, 325, 313, 281, 302, 306, 298, 275, 306, 314, 311, 290, 314, 311]
+**********Average*********
+Average working path complexity per Tbs: 6.809302325581395
+Average backup path complexity per Tbs: 8.690697674418605
+Average working path spectrum per Tbs: 14.42093023255814
+Average backup path spectrum per Tbs: 10.472093023255814
