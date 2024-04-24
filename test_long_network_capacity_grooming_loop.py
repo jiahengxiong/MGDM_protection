@@ -251,6 +251,7 @@ if __name__ == '__main__':
         approach_name = 'undefined'
 
 
+    num_loop = 0
     while True:
         processes = []
         for protection in protection_policy:
@@ -305,6 +306,9 @@ if __name__ == '__main__':
                         flag = False
         if flag:
             break
+        # num_loop += 1
+        # if num_loop > 3:
+        #     break
 
     # winsound.Beep(2000, 5000)
 
